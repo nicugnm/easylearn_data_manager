@@ -11,8 +11,6 @@ Stack used for the project is:
 * Spring with Spring Boot, 2.6.7
 * Spring Native 0.11.4 & GraalVM Support
 * DAOs
-* MapStruct Plugin 1.4.2-Final
-* DTOs
 * JaCoCo Plugin 0.8.8
 * Mocked Tests are maked with Mockito and JUnit 5
 * Codacy for analyze, quality code and coverage tests
