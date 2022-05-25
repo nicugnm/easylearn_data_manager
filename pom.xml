@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>ro.nicolaemariusghergu.easylearn</groupId>
-    <artifactId>books</artifactId>§
+    <artifactId>books</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>be-books</name>
     <description>be-books</description>
