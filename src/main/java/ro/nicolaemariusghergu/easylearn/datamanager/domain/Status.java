@@ -1,11 +1,11 @@
 package ro.nicolaemariusghergu.easylearn.datamanager.domain;
 
 import lombok.*;
-import ro.nicolaemariusghergu.easylearn.datamanager.domain.AbstractEntity;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor

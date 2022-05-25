@@ -1,6 +1,7 @@
 package ro.nicolaemariusghergu.easylearn.datamanager.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
@@ -8,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
-@Builder
+@SuperBuilder
 public class Category extends AbstractEntity {
 
     private String name;

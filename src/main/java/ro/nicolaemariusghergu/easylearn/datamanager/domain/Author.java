@@ -1,10 +1,11 @@
 package ro.nicolaemariusghergu.easylearn.datamanager.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @Getter

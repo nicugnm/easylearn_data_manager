@@ -1,8 +1,9 @@
 package ro.nicolaemariusghergu.easylearn.datamanager.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,13 +14,15 @@ public class Book extends AbstractEntity {
 
     private Category category;
 
-    private Status status;
+    private PublishHouse publishHouse;
 
     private Discount discount;
 
-    private PriceType priceType;
+    private Status status;
 
-    private PublishHouse publishHouse;
+    private Author author;
+
+    private PriceType priceType;
 
     private Integer stockCount;
 
