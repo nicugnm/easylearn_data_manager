@@ -23,13 +23,10 @@ import java.util.*;
 public class BookServiceImpl implements BookService {
 
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
-    private Set<String> INSERTS = new HashSet<>();
-
-    private final ProductProperties productProperties;
-
     private static final Long ID_UNAVAILABLE = 0L;
     private static final Long ID_IN_STOCK = 1L;
-
+    private final ProductProperties productProperties;
+    private Set<String> INSERTS = new HashSet<>();
 
     @SneakyThrows
     @Override
@@ -104,7 +101,7 @@ public class BookServiceImpl implements BookService {
 
             if (book.getStockCount() == 0) {
                 book.setStatus(Status.builder()
-                                .id(productProperties.getStatus().get(ID_UNAVAILABLE.intValue()).getId())
+                        .id(productProperties.getStatus().get(ID_UNAVAILABLE.intValue()).getId())
                         .statusType(productProperties.getStatus().get(ID_UNAVAILABLE.intValue()).getStatusType())
                         .build());
             }
@@ -119,7 +116,7 @@ public class BookServiceImpl implements BookService {
     public void createInserts(List<Book> books) {
         Set<String> inserts = new HashSet<>();
         books.forEach(book -> inserts.add("INSERT INTO books ('category_id', 'status_id', 'discount_id', 'price_type_id', 'publish_house_id', 'stock_count', 'icon_url', 'author_id')" + " VALUES ('" +
-                        book.getCategory().getId() + "', '" +
+                book.getCategory().getId() + "', '" +
                 book.getStatus().getId() + "', '" +
                 book.getDiscount().getId() + "', '" +
                 book.getPriceType().getId() + "', '" +
