@@ -1,14 +1,12 @@
 package ro.nicolaemariusghergu.easylearn.datamanager.service.impl;
 
-
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ro.nicolaemariusghergu.easylearn.datamanager.domain.Category;
-import ro.nicolaemariusghergu.easylearn.datamanager.service.CategoryService;
+import ro.nicolaemariusghergu.easylearn.datamanager.domain.PublishHouse;
+import ro.nicolaemariusghergu.easylearn.datamanager.service.PublishHouseService;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,17 +15,16 @@ import java.net.http.HttpResponse;
 import java.util.HashSet;
 import java.util.Set;
 
-@Slf4j
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class PublishHouseServiceImpl implements PublishHouseService {
 
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
-    private Set<Category> AVAILABLE_CATEGORIES = new HashSet<>();
+    private Set<PublishHouse> AVAILABLE_PUBLISH_HOUSES = new HashSet<>();
 
     @SneakyThrows
     @Override
-    public Set<Category> extractCategoriesFromRobmiles(String url) {
-        long categoryId = 1L;
+    public Set<PublishHouse> extractPublishHousesFromRobmiles(String url) {
+//        long pub = 1L;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .build();
@@ -37,29 +34,29 @@ public class CategoryServiceImpl implements CategoryService {
 
         JSONArray jsonArray = new JSONArray(HTTP_RESPONSE.body());
 
-        Set<Category> categories = new HashSet<>();
+        Set<PublishHouse> publishHouses = new HashSet<>();
 
         for (int fields = 0; fields < jsonArray.length(); fields++) {
             var jsonEntries = jsonArray.get(fields);
             var jsonObject = new JSONObject(jsonEntries.toString());
-            var objectCategories = jsonObject.getJSONArray("categories");
-            var categoryName = objectCategories.get(0).toString();
-            if (!categories.contains(Category.builder().name(categoryName).build())) {
-                Category category = Category.builder()
-                    //    .id(categoryId++)
-                        .name(categoryName)
+            var objectAuthors = jsonObject.getJSONObject("author");
+            var publishHouseName = objectAuthors.get("displayName").toString();
+            if (!publishHouses.contains(PublishHouse.builder().name(publishHouseName).build())) {
+                PublishHouse publishHouse = PublishHouse.builder()
+                        //.id(authorId++)
+                        .name(publishHouseName)
                         .build();
-                categories.add(category);
+                publishHouses.add(publishHouse);
             }
         }
 
-        AVAILABLE_CATEGORIES = categories;
+        AVAILABLE_PUBLISH_HOUSES = publishHouses;
 
-        return categories;
+        return publishHouses;
     }
 
     @Override
-    public ResponseEntity<Set<Category>> getCategories() {
-        return ResponseEntity.ok(AVAILABLE_CATEGORIES);
+    public ResponseEntity<Set<PublishHouse>> getAvailablePublishHouses() {
+        return ResponseEntity.ok(AVAILABLE_PUBLISH_HOUSES);
     }
 }

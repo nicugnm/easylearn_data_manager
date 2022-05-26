@@ -1,14 +1,13 @@
 package ro.nicolaemariusghergu.easylearn.datamanager.domain;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@SuperBuilder
+@Builder
 @EqualsAndHashCode(callSuper = true)
 public class PriceType extends AbstractEntity {
 

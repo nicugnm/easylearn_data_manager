@@ -14,9 +14,6 @@ public record StatusServiceImpl(ProductProperties productProperties)
 
     @Override
     public ResponseEntity<List<Status>> getAvailableStatuses() {
-        System.out.println("Ajunge pana aici");
-        productProperties.getStatus().forEach(System.out::println);
-        productProperties.getPriceTypes().forEach(System.out::println);
         return ResponseEntity.ok(productProperties.getStatus());
     }
 }

@@ -1,7 +1,6 @@
 package ro.nicolaemariusghergu.easylearn.datamanager.domain;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 
 @Getter
@@ -9,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @EqualsAndHashCode(callSuper = true)
 public class PublishHouse extends AbstractEntity {
 

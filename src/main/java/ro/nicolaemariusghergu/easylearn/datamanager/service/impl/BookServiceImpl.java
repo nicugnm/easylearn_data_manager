@@ -53,20 +53,20 @@ public class BookServiceImpl implements BookService {
             var objectCategories = jsonObject.getJSONArray("categories");
             var categoryName = objectCategories.get(0).toString();
 
-            var categoryId = categories.stream()
-                    .filter(category -> category.getName().equals(categoryName))
-                    .map(AbstractEntity::getId)
-                    .findFirst()
-                    .get();
+//            var categoryId = categories.stream()
+//                    .filter(category -> category.getName().equals(categoryName))
+//                    .map(AbstractEntity::getId)
+//                    .findFirst()
+//                    .get();
 
             var objectAuthors = jsonObject.getJSONObject("author");
             var authorName = objectAuthors.get("displayName").toString();
 
-            var authorId = authors.stream()
-                    .filter(author -> author.getName().equals(authorName))
-                    .map(AbstractEntity::getId)
-                    .findFirst()
-                    .get();
+//            var authorId = authors.stream()
+//                    .filter(author -> author.getName().equals(authorName))
+//                    .map(AbstractEntity::getId)
+//                    .findFirst()
+//                    .get();
 
             var iconUrl = String.valueOf(jsonObject.get("assetUrl"));
 
@@ -81,27 +81,27 @@ public class BookServiceImpl implements BookService {
                 Book book = Book.builder()
                         .title(title)
                         .category(Category.builder()
-                                .id(categoryId)
+ //                               .id(categoryId)
                                 .name(categoryName)
                                 .build())
                         .publishHouse(PublishHouse.builder()
-                                .id(authorId)
+   //                             .id(authorId)
                                 .name(authorName)
                                 .build())
                         .author(Author.builder()
-                                .id(authorId)
+     //                           .id(authorId)
                                 .name(authorName)
                                 .build())
                         .discount(Discount.builder()
-                                .id(1L)
+       //                         .id(1L)
                                 .value(BigDecimal.ZERO)
                                 .build())
                         .priceType(PriceType.builder()
-                                .id(productProperties.getPriceTypes().get(randomValue).getId())
+                           //     .id(productProperties.getPriceTypes().get(randomValue).getId())
                                 .value(productProperties.getPriceTypes().get(randomValue).getValue())
                                 .build())
                         .status(Status.builder()
-                                .id(productProperties.getStatus().get(ID_IN_STOCK.intValue()).getId())
+                             //   .id(productProperties.getStatus().get(ID_IN_STOCK.intValue()).getId())
                                 .statusType(productProperties.getStatus().get(ID_IN_STOCK.intValue()).getStatusType())
                                 .build())
                         .price(BigDecimal.ZERO)
@@ -111,7 +111,7 @@ public class BookServiceImpl implements BookService {
 
                 if (book.getStockCount() == 0) {
                     book.setStatus(Status.builder()
-                            .id(productProperties.getStatus().get(ID_UNAVAILABLE.intValue()).getId())
+                   //         .id(productProperties.getStatus().get(ID_UNAVAILABLE.intValue()).getId())
                             .statusType(productProperties.getStatus().get(ID_UNAVAILABLE.intValue()).getStatusType())
                             .build());
                 }

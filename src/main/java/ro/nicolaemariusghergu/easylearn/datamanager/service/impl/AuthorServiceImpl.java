@@ -45,7 +45,7 @@ public class AuthorServiceImpl implements AuthorService {
             var authorName = objectAuthors.get("displayName").toString();
             if (!authors.contains(Author.builder().name(authorName).build())) {
                 Author author = Author.builder()
-                        .id(authorId++)
+                        //.id(authorId++)
                         .name(authorName)
                         .build();
                 authors.add(author);

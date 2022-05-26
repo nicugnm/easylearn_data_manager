@@ -11,6 +11,7 @@ Stack used for the project is:
 * Spring with Spring Boot, 2.6.7
 * Spring Native 0.11.4 & GraalVM Support
 * DAOs
+* Swagger
 * JaCoCo Plugin 0.8.8
 * Mocked Tests are maked with Mockito and JUnit 5
 * Codacy for analyze, quality code and coverage tests

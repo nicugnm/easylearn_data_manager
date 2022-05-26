@@ -1,11 +1,10 @@
 package ro.nicolaemariusghergu.easylearn.datamanager.domain;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
-@SuperBuilder
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
