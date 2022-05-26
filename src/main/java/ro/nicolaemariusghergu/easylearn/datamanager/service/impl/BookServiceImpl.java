@@ -28,7 +28,7 @@ public class BookServiceImpl implements BookService {
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
     private static final Long ID_UNAVAILABLE = 0L;
     private static final Long ID_IN_STOCK = 1L;
-    private static final Long ID_NOT_FREE = 2L;
+    private static final String VALUE_NOT_FREE = "NOT FREE";
     private final ProductProperties productProperties;
     private Set<Book> AVAILABLE_BOOKS = new HashSet<>();
 
@@ -116,7 +116,7 @@ public class BookServiceImpl implements BookService {
                             .build());
                 }
 
-                if (book.getPriceType().equals(productProperties.getPriceTypes().get(ID_NOT_FREE.intValue()))) {
+                if (book.getPriceType().getValue().equals(VALUE_NOT_FREE)) {
                     book.setPrice(BigDecimal.valueOf(randomPrice));
                 }
                 books.add(book);

@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @ToString
 @EqualsAndHashCode(
         exclude = {"category", "publishHouse", "discount", "status",
-                "author", "priceType", "stockCount", "iconUrl"},
+                "author", "priceType", "stockCount", "iconUrl", "price"},
         callSuper = false
 )
 public class Book extends AbstractEntity {
