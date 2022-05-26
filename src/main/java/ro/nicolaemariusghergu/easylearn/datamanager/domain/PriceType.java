@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class PriceType extends AbstractEntity {
 
     private String value;
