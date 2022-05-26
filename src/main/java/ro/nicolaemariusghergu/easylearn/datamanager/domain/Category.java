@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @SuperBuilder
 public class Category extends AbstractEntity {
 

@@ -3,14 +3,22 @@ package ro.nicolaemariusghergu.easylearn.datamanager.domain;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
+
 @SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @ToString
+@EqualsAndHashCode(
+        exclude = {"category", "publishHouse", "discount", "status",
+                "author", "priceType", "stockCount", "iconUrl"},
+        callSuper = false
+)
 public class Book extends AbstractEntity {
+
+    private String title;
 
     private Category category;
 
@@ -27,4 +35,6 @@ public class Book extends AbstractEntity {
     private Integer stockCount;
 
     private String iconUrl;
+
+    private BigDecimal price;
 }

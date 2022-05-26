@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ro.nicolaemariusghergu.easylearn.datamanager.domain.Author;
 import ro.nicolaemariusghergu.easylearn.datamanager.service.AuthorService;
@@ -12,9 +13,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -22,11 +21,11 @@ import java.util.Set;
 public class AuthorServiceImpl implements AuthorService {
 
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
-    private Set<String> INSERTS = new HashSet<>();
+    private Set<Author> AVAILABLE_AUTHORS = new HashSet<>();
 
     @SneakyThrows
     @Override
-    public List<Author> extractAuthorsFromRobmiles(String url) {
+    public Set<Author> extractAuthorsFromRobmiles(String url) {
         long authorId = 1L;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -37,32 +36,31 @@ public class AuthorServiceImpl implements AuthorService {
 
         JSONArray jsonArray = new JSONArray(HTTP_RESPONSE.body());
 
-        List<Author> categories = new ArrayList<>();
+        Set<Author> authors = new HashSet<>();
 
         for (int fields = 0; fields < jsonArray.length(); fields++) {
             var jsonEntries = jsonArray.get(fields);
             var jsonObject = new JSONObject(jsonEntries.toString());
             var objectAuthors = jsonObject.getJSONObject("author");
             var authorName = objectAuthors.get("displayName").toString();
-            Author author = Author.builder()
-                    .id(authorId++)
-                    .name(authorName)
-                    .build();
-            categories.add(author);
+            if (!authors.contains(Author.builder().name(authorName).build())) {
+                Author author = Author.builder()
+                        .id(authorId++)
+                        .name(authorName)
+                        .build();
+                authors.add(author);
+            }
         }
 
-        return categories;
+        AVAILABLE_AUTHORS = authors;
+
+        return authors;
     }
 
     @Override
-    public void createInserts(List<Author> authors) {
-        Set<String> inserts = new HashSet<>();
-        authors.forEach(author -> inserts.add("INSERT INTO authors ('name') VALUES ('" + author.getName() + "')"));
-        INSERTS = inserts;
+    public ResponseEntity<Set<Author>> getAuthors() {
+        return ResponseEntity.ok(AVAILABLE_AUTHORS);
     }
 
-    @Override
-    public Set<String> getInserts() {
-        return INSERTS;
-    }
+
 }

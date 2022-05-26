@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ro.nicolaemariusghergu.easylearn.datamanager.domain.Category;
 import ro.nicolaemariusghergu.easylearn.datamanager.service.CategoryService;
 
 import java.util.Set;
@@ -12,8 +13,8 @@ import java.util.Set;
 @RequestMapping("/api/categories")
 public record CategoryController(CategoryService categoryService) {
 
-    @GetMapping("/v1/inserts")
-    public ResponseEntity<Set<String>> getCategoryInserts() {
-        return ResponseEntity.ok(categoryService.getInserts());
+    @GetMapping("/v1")
+    public ResponseEntity<Set<Category>> getCategoryInserts() {
+        return categoryService.getCategories();
     }
 }

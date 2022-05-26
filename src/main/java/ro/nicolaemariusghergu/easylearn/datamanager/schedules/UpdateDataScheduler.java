@@ -25,17 +25,11 @@ public class UpdateDataScheduler {
     public void run() {
         log.info("Starting saving informations about Categories...");
         var categories = categoryService.extractCategoriesFromRobmiles(urlPropertiesPath.getUrl());
-        log.info("Creating inserts for Categories...");
-        categoryService.createInserts(categories);
 
         log.info("Starting saving informations about Authors...");
         var authors = authorService.extractAuthorsFromRobmiles(urlPropertiesPath.getUrl());
-        log.info("Creating inserts for Authors...");
-        authorService.createInserts(authors);
 
         log.info("Starting saving informations about Books...");
-        var books = bookService.extractBooksFromRobmiles(urlPropertiesPath.getUrl(), categories, authors);
-        log.info("Creating inserts for Books...");
-        bookService.createInserts(books);
+        bookService.extractBooksFromRobmiles(urlPropertiesPath.getUrl(), categories, authors);
     }
 }

@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ro.nicolaemariusghergu.easylearn.datamanager.config.ProductProperties;
 import ro.nicolaemariusghergu.easylearn.datamanager.domain.*;
@@ -15,7 +16,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,12 +28,13 @@ public class BookServiceImpl implements BookService {
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
     private static final Long ID_UNAVAILABLE = 0L;
     private static final Long ID_IN_STOCK = 1L;
+    private static final Long ID_NOT_FREE = 2L;
     private final ProductProperties productProperties;
-    private Set<String> INSERTS = new HashSet<>();
+    private Set<Book> AVAILABLE_BOOKS = new HashSet<>();
 
     @SneakyThrows
     @Override
-    public List<Book> extractBooksFromRobmiles(String url, List<Category> categories, List<Author> authors) {
+    public void extractBooksFromRobmiles(String url, Set<Category> categories, Set<Author> authors) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .build();
@@ -40,7 +44,7 @@ public class BookServiceImpl implements BookService {
 
         JSONArray jsonArray = new JSONArray(HTTP_RESPONSE.body());
 
-        List<Book> books = new ArrayList<>();
+        Set<Book> books = new HashSet<>();
 
         for (int fields = 0; fields < jsonArray.length(); fields++) {
             var jsonEntries = jsonArray.get(fields);
@@ -66,53 +70,68 @@ public class BookServiceImpl implements BookService {
 
             var iconUrl = String.valueOf(jsonObject.get("assetUrl"));
 
+            var title = String.valueOf(jsonObject.get("title"));
+
             var random = new Random();
             var randomValue = random.nextInt(0, 2);
             var randomStock = random.nextInt(1, 50);
+            var randomPrice = random.nextInt(1, 20);
 
-            Book book = Book.builder()
-                    .category(Category.builder()
-                            .id(categoryId)
-                            .name(categoryName)
-                            .build())
-                    .publishHouse(PublishHouse.builder()
-                            .id(authorId)
-                            .name(authorName)
-                            .build())
-                    .author(Author.builder()
-                            .id(authorId)
-                            .name(authorName)
-                            .build())
-                    .discount(Discount.builder()
-                            .id(1L)
-                            .value(BigDecimal.ZERO)
-                            .build())
-                    .priceType(PriceType.builder()
-                            .id(productProperties.getPriceTypes().get(randomValue).getId())
-                            .value(productProperties.getPriceTypes().get(randomValue).getValue())
-                            .build())
-                    .status(Status.builder()
-                            .id(productProperties.getStatus().get(ID_IN_STOCK.intValue()).getId())
-                            .statusType(productProperties.getStatus().get(ID_IN_STOCK.intValue()).getStatusType())
-                            .build())
-                    .stockCount(randomStock)
-                    .iconUrl(iconUrl)
-                    .build();
+            if (!books.contains(Book.builder().title(title).build())) {
+                Book book = Book.builder()
+                        .title(title)
+                        .category(Category.builder()
+                                .id(categoryId)
+                                .name(categoryName)
+                                .build())
+                        .publishHouse(PublishHouse.builder()
+                                .id(authorId)
+                                .name(authorName)
+                                .build())
+                        .author(Author.builder()
+                                .id(authorId)
+                                .name(authorName)
+                                .build())
+                        .discount(Discount.builder()
+                                .id(1L)
+                                .value(BigDecimal.ZERO)
+                                .build())
+                        .priceType(PriceType.builder()
+                                .id(productProperties.getPriceTypes().get(randomValue).getId())
+                                .value(productProperties.getPriceTypes().get(randomValue).getValue())
+                                .build())
+                        .status(Status.builder()
+                                .id(productProperties.getStatus().get(ID_IN_STOCK.intValue()).getId())
+                                .statusType(productProperties.getStatus().get(ID_IN_STOCK.intValue()).getStatusType())
+                                .build())
+                        .price(BigDecimal.ZERO)
+                        .stockCount(randomStock)
+                        .iconUrl(iconUrl)
+                        .build();
 
-            if (book.getStockCount() == 0) {
-                book.setStatus(Status.builder()
-                        .id(productProperties.getStatus().get(ID_UNAVAILABLE.intValue()).getId())
-                        .statusType(productProperties.getStatus().get(ID_UNAVAILABLE.intValue()).getStatusType())
-                        .build());
+                if (book.getStockCount() == 0) {
+                    book.setStatus(Status.builder()
+                            .id(productProperties.getStatus().get(ID_UNAVAILABLE.intValue()).getId())
+                            .statusType(productProperties.getStatus().get(ID_UNAVAILABLE.intValue()).getStatusType())
+                            .build());
+                }
+
+                if (book.getPriceType().equals(productProperties.getPriceTypes().get(ID_NOT_FREE.intValue()))) {
+                    book.setPrice(BigDecimal.valueOf(randomPrice));
+                }
+                books.add(book);
             }
-
-            books.add(book);
         }
+        AVAILABLE_BOOKS = books;
 
-        return books;
     }
 
     @Override
+    public ResponseEntity<Set<Book>> getBooks() {
+        return ResponseEntity.ok(AVAILABLE_BOOKS);
+    }
+
+    /*@Override
     public void createInserts(List<Book> books) {
         Set<String> inserts = new HashSet<>();
         books.forEach(book -> inserts.add("INSERT INTO books ('category_id', 'status_id', 'discount_id', 'price_type_id', 'publish_house_id', 'stock_count', 'icon_url', 'author_id')" + " VALUES ('" +
@@ -131,5 +150,5 @@ public class BookServiceImpl implements BookService {
     @Override
     public Set<String> getInserts() {
         return INSERTS;
-    }
+    }*/
 }

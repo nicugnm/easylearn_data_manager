@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Getter
 @Setter
 public class Author extends AbstractEntity {
